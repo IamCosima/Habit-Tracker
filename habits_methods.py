@@ -57,7 +57,7 @@ Default_Habits = [
     inquirer.List(
         "Habits",
         message="Choose Habit that you want to track",
-        choices=["Drink Water Daily", "Daily Exercise","Sleep 8 hours a day","Do the weekly laundry","Take out trash"],
+        choices=["Drink Water Daily", "Daily Exercise","Sleep 8 hours a day","Do the weekly laundry","Take out trash",'Custom'],
     ),
 ]  
 
@@ -71,7 +71,7 @@ def Habit_Create():
     proid = proid.get("Perodicity")
     new_Habit = model.Habit(name,desc,proid)
     database.insert_habit(new_Habit)
-    print("Sucessful creation of habit: " + name + 'with a description of ' + desc + 'and a perodicity of ' + proid)
+    print("Sucessful creation of habit: " + name + 'with a description of ' + desc + ' and a perodicity of ' + proid)
 
 @app.command("Delete")
 def Habit_Delete(): 
@@ -122,8 +122,29 @@ def Habit_Track():
     elif tracked == "Take out trash":
         database.insert_Tracked(trash)
         List_Tracked_Habits()
+    elif tracked == 'Custom':
+        name = custom_habit()
+        chosen = database.fetch_custom(name)
+        print(chosen)
+        custom = model.Habit(chosen[0],chosen[1],chosen[2])
+        database.insert_Tracked(custom)
     else:
-        print("Bing")
+        print("Something went wrong if you are here")
+
+
+def custom_habit():
+    raw = database.get_all_user_Habits()
+    processed = [i[0] for i in raw]
+    All_tracked = [
+    inquirer.List(
+        "List",
+        message="Choose Custom Habit that you want to track",
+        choices= processed,
+        ),
+    ] 
+    chosen = inquirer.prompt(All_tracked)
+    chosen = chosen.get('List')
+    return chosen
 
 
 @app.command("List_All")
@@ -148,7 +169,7 @@ def List_All_Daily_Habits():
     'This will show all the daily Habits in Table Form'
     """
     daily = database.get_all_Daily_habits()
-    print(daily)
+    #print(daily)
     Title_table = ':diamonds: Daily Habits :diamonds:'
     print(Title_table)
     for i in range(len(daily)):
@@ -221,9 +242,12 @@ def List_Longest_Streak_Habit():
     """
     List habit with the longest streak
     """
-    streak = database.longest_streak_Habit()
-    processed = [i[0] for i in streak]
-    streak_message = '[green]Well Done your longest habit is: ' + processed[0] +' and Has a Streak of ' + str(streak[0][1]) + ' :smile:'
+    streaks = database.longest_streak_Habit()
+    print(streaks)
+    streaks.sort()
+    streak = list(streaks)
+    print(streak)
+    streak_message = '[green]Well Done your longest habit is: ' + str(streak[0][0]) +' and Has a Streak of ' + str(streak[0][1]) + ' :smile:'
     print(streak_message)
 
 if __name__ == "__main__":

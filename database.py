@@ -26,7 +26,7 @@ def create_Tracked():
 """)
 
 
-
+create_table()
 create_Tracked()
 
 def insert_habit(insert : Habit):
@@ -39,7 +39,20 @@ def get_habit():
     c.execute('SELECT Name from Habit')
     get =c.fetchall()
     return get
-    
+
+def fetch_custom(name):
+    c.execute("SELECT * FROM Habit WHERE Name = ? ",[name])
+    get = c.fetchone()
+    return get
+
+def get_all_user_Habits():
+    c.execute('SELECT * from Habit')
+    get =c.fetchall()
+
+    return get
+
+
+
 def delete_habits(name):
     c.execute("DELETE FROM Habit WHERE Name = ? ",[name])
     conn.commit()
@@ -85,7 +98,7 @@ def get_day():
 
 def update_streak(name):
     print(name)
-    c.execute('UPDATE Tracked SET Streak_Num = 1 WHERE Name = ?;',[name])
+    c.execute('UPDATE Tracked SET Streak_Num = Streak_Num + 1 WHERE Name = ?;',[name])
     conn.commit()
     print("Streak has been updated for " + name )
 
