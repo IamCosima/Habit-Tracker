@@ -2,6 +2,7 @@ import sqlite3
 from typing import List
 import datetime
 from model import Habit
+from model import User
 import habits_methods
 conn = sqlite3.connect('HabitTic')
 
@@ -25,9 +26,21 @@ def create_Tracked():
     )
 """)
 
+def create_User_Table():
+    c.execute(""" CREATE TABLE IF NOT EXISTS Users (
+                Name TEXT, 
+                Level INTEGER     
+    )""")
+
 
 create_table()
 create_Tracked()
+create_User_Table()
+
+def insert_User(user : User):
+    with conn:
+        c.execute('INSERT INTO Users (Name,Level) VALUES (?,?)',
+        (user.User_name , user.User_level))
 
 def insert_habit(insert : Habit):
     with conn:
