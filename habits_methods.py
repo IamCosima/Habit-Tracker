@@ -7,6 +7,8 @@ from typing_extensions import Annotated
 import inquirer
 import model
 import database
+import datetime
+import analytics
 
 
 console = Console()
@@ -64,6 +66,8 @@ Default_Habits = [
 #Habits
 @app.command("Create")
 def Habit_Create():
+    Title = 'Create Habit'
+    print(pyfiglet.figlet_format(Title))
     database.create_table()
     name = typer.prompt("What is the name of the habit?")
     desc = typer.prompt("Give a short description of the habit?")
@@ -75,6 +79,8 @@ def Habit_Create():
 
 @app.command("Delete")
 def Habit_Delete(): 
+    Title = 'Delete Habit'
+    print(pyfiglet.figlet_format(Title))
     name = habit_list()
     confirm = [
         inquirer.Confirm("continue", message="Do you wish to delete " + name )    
@@ -105,23 +111,25 @@ def habit_list():
 
 @app.command("Track")
 def Habit_Track():
+    Title = 'Track Habit'
+    print(pyfiglet.figlet_format(Title))
     tracked = inquirer.prompt(Default_Habits)
     tracked = tracked.get("Habits")
     if tracked == "Drink Water Daily":
         database.insert_Tracked(water)
-        List_Tracked_Habits()
+        analytics.List_Tracked_Habits()
     elif tracked == "Daily Exercise":
         database.insert_Tracked(exercise)
-        List_Tracked_Habits()
+        analytics.List_Tracked_Habits()
     elif tracked == "Sleep 8 hours a day":
         database.insert_Tracked(sleep)
-        List_Tracked_Habits()
+        analytics.List_Tracked_Habits()
     elif tracked == "Do the weekly laundry":
         database.insert_Tracked(laundry)
-        List_Tracked_Habits()
+        analytics.List_Tracked_Habits()
     elif tracked == "Take out trash":
         database.insert_Tracked(trash)
-        List_Tracked_Habits()
+        analytics.List_Tracked_Habits()
     elif tracked == 'Custom':
         name = custom_habit()
         chosen = database.fetch_custom(name)
@@ -146,12 +154,42 @@ def custom_habit():
     chosen = chosen.get('List')
     return chosen
 
+@app.command("Check")
+def check_off():
+    Title = 'Check Off Habit'
+    print(pyfiglet.figlet_format(Title))
+    name = choice()
+    date = datetime.datetime.today().strftime("%x")
+    database.update_streak(name,date)
+    
+def choice():
+        raw = database.checked()
+        processed = [i[0] for i in raw]
+        All_tracked = [
+        inquirer.List(
+            "List",
+            message="Choose Habit",
+            choices= processed,
+        ),
+    ]  
+        check = inquirer.prompt(All_tracked)
+        check = check.get('List')
+        return check
 
-@app.command("List_All")
+def reset():
+    all = database.get_all_Habits()
+    date = datetime.datetime.today().strftime("%x")
+    for i in range(len(all)):
+        if all[i][4] != date:
+            database.daily_reset(all[i][0])
+
+'''@app.command("List_All")
 def List_Tracked_Habits():
     """
     This will Show all Tracked Habits
     """
+    Title = 'All Habits'
+    print(pyfiglet.figlet_format(Title))
     List_All_Daily_Habits()
     List_All_Weekly_Habits()
     
@@ -168,12 +206,17 @@ def List_All_Daily_Habits():
     """
     'This will show all the daily Habits in Table Form'
     """
+    Title = 'All Daily Habits'
+    print(pyfiglet.figlet_format(Title))
     daily = database.get_all_Daily_habits()
     #print(daily)
     Title_table = ':diamonds: Daily Habits :diamonds:'
-    print(Title_table)
+    #print(Title_table)
     for i in range(len(daily)):
-            Daily_habits.add_row(daily[i][0], str(daily[i][2]),'❌')
+            if daily[i][5] == '1':
+                Daily_habits.add_row(daily[i][0], str(daily[i][2]),'✅')
+            else:
+                Daily_habits.add_row(daily[i][0], str(daily[i][2]),'❌')
     console.print(Daily_habits)
     
 
@@ -182,33 +225,19 @@ def List_All_Weekly_Habits():
     """
     'This will show all the weekly Habits in Table Form'
     """
+    Title = 'All Weekly Habits'
+    print(pyfiglet.figlet_format(Title))
     weekly = database.get_all_Weekly_habits()
     Title_table = ':diamonds: Weekly Habits :diamonds:'
-    print(Title_table)
+    #print(Title_table)
 
     for i in range(len(weekly)):
-        Weekly_habits.add_row( weekly[i][0], str(weekly[i][2]),'❌')
-    console.print(Weekly_habits)
+        if weekly[i][5] == '1':
+            Weekly_habits.add_row( weekly[i][0], str(weekly[i][2]),'✅')
+        else: 
+            Weekly_habits.add_row( weekly[i][0], str(weekly[i][2]),'❌')
+    #console.print(Weekly_habits)
     
-@app.command("Check")
-def check_off():
-    name = choice()
-    database.update_streak(name)
-    
-def choice():
-        raw = database.checked()
-        processed = [i[0] for i in raw]
-        All_tracked = [
-        inquirer.List(
-            "List",
-            message="Choose Habit that you want to check off",
-            choices= processed,
-        ),
-    ]  
-        check = inquirer.prompt(All_tracked)
-        check = check.get('List')
-        return check
-
 
 @app.command("Weekly_Summary")
 def List_weekly_Summary():
@@ -242,13 +271,15 @@ def List_Longest_Streak_Habit():
     """
     List habit with the longest streak
     """
+    Title = 'Habit Streak'
+    print(pyfiglet.figlet_format(Title))
     streaks = database.longest_streak_Habit()
     print(streaks)
     streaks.sort()
     streak = list(streaks)
     print(streak)
     streak_message = '[green]Well Done your longest habit is: ' + str(streak[0][0]) +' and Has a Streak of ' + str(streak[0][1]) + ' :smile:'
-    print(streak_message)
+    print(streak_message)'''
 
 if __name__ == "__main__":
     app()

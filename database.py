@@ -22,7 +22,10 @@ def create_Tracked():
               Name TEXT, 
               periodicity TEXT,
               Streak_Num INTEGER,
-              Day TEXT
+              Start_Day TEXT,
+              Completion_day TEXT,
+              Status TEXT
+
     )
 """)
 
@@ -74,17 +77,20 @@ def delete_habits(name):
 
 def insert_Tracked(track : Habit):
     with conn:
-        c.execute('INSERT INTO Tracked (Name, periodicity, Streak_Num,Day) VALUES (?,?,?,?)',(
-        track.Habit_Name,track.Habit_periodicity, track.Habit_Streak_Num, track.Habit_Day))
+        c.execute('INSERT INTO Tracked (Name, periodicity, Streak_Num,Start_Day,Status) VALUES (?,?,?,?,?)',(
+        track.Habit_Name,track.Habit_periodicity, track.Habit_Streak_Num, track.Habit_Day,track.status))
 
 
 
 def get_all_Habits():
     c.execute('SELECT * from Tracked')
     get =c.fetchall()
-
     return get
 
+
+def daily_reset(name):
+    c.execute('UPDATE Tracked SET  Status = FALSE  WHERE Name = ?;',[name])
+    conn.commit()
 
 def get_all_Daily_habits():
     c.execute('SELECT * from Tracked WHERE periodicity = "Daily"')
@@ -109,9 +115,15 @@ def get_day():
     return days
 
 
-def update_streak(name):
+def get_ALL_Habit(name):
+    c.execute("SELECT Name,Streak_Num FROM Tracked WHERE Name = ?",[name])
+    habit = c.fetchone()
+    return habit
+
+
+def update_streak(name,complete):
     print(name)
-    c.execute('UPDATE Tracked SET Streak_Num = Streak_Num + 1 WHERE Name = ?;',[name])
+    c.execute('UPDATE Tracked SET Streak_Num = Streak_Num + 1,Completion_day = ?, Status = TRUE  WHERE Name = ?;',[complete,name])
     conn.commit()
     print("Streak has been updated for " + name )
 
