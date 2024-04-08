@@ -9,6 +9,7 @@ import model
 import database
 import datetime
 import habits_methods
+import calendar 
 
 
 console = Console()
@@ -59,7 +60,7 @@ def List_All_Daily_Habits():
     Title_table = ':diamonds: Daily Habits :diamonds:'
     #print(Title_table)
     for i in range(len(daily)):
-            if daily[i][5] == '1':
+            if daily[i][4] == '1':
                 Daily_habits.add_row(daily[i][0], str(daily[i][2]),'✅')
             else:
                 Daily_habits.add_row(daily[i][0], str(daily[i][2]),'❌')
@@ -78,7 +79,7 @@ def List_All_Weekly_Habits():
     #print(Title_table)
 
     for i in range(len(weekly)):
-        if weekly[i][5] == '1':
+        if weekly[i][4] == '1':
             Weekly_habits.add_row( weekly[i][0], str(weekly[i][2]),'✅')
         else: 
             Weekly_habits.add_row( weekly[i][0], str(weekly[i][2]),'❌')
@@ -87,22 +88,30 @@ def List_All_Weekly_Habits():
 
 
 
-@app.command("Weekly_Summary")
+@app.command("Summary")
 def List_weekly_Summary():
     weekly_summary = Table(show_header=True)
-    print("=================================================================")
-    print("Drink Water")
-    print("=================================================================")
-    weekly_summary.add_column("Mon", justify="right", style="cyan", no_wrap=True)
-    weekly_summary.add_column("Tue", style="magenta")
-    weekly_summary.add_column("Wed", justify="right")
-    weekly_summary.add_column("Thurs", justify="right", style="cyan", no_wrap=True)
-    weekly_summary.add_column("Fri", style="magenta")
-    weekly_summary.add_column("Sat", justify="right")
-    weekly_summary.add_column("Sun", justify="right")
+    all = database.get_all_Days()
+    names = database.get_all_Tracked_Names()
+    Column_Names = [i[0] for i in names]
+    summary = res = [list(ele) for ele in all]  
+    print('🟢 = That the habit was completed' + '\n'+'🔴 = That the habit was missed')
+    for k in range(len(summary)):
+        if summary[k][2] == '1':
+           summary[k][2] = '🟢'
+        elif summary[k][2] == '0':
+            summary[k][2] = '🔴'
+        else:
+           print(summary[k])
+    
+    weekly_summary.add_column("Date")
+    for col in Column_Names:
+        weekly_summary.add_column(col)
 
-    weekly_summary.add_row('🟢','🟢','🟢','🟢','🟢','🟢','🟢')
-    weekly_summary.add_row('🔴','🔴','🔴','🔴','🔴','🔴','🔴',)
+
+    for j in range(len(summary)-1):
+        weekly_summary.add_row(summary[j][1],summary[j][2],summary[j + 1][2])
+        
 
     console.print(weekly_summary)
     

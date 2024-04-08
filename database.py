@@ -23,7 +23,6 @@ def create_Tracked():
               periodicity TEXT,
               Streak_Num INTEGER,
               Start_Day TEXT,
-              Completion_day TEXT,
               Status TEXT
 
     )
@@ -36,9 +35,19 @@ def create_User_Table():
     )""")
 
 
+
+def create_Days_Table():
+    c.execute(""" CREATE TABLE IF NOT EXISTS Days (
+                Name TEXT, 
+                Date INTEGER,
+                Status TEXT    
+    )""")
+
+
 create_table()
 create_Tracked()
 create_User_Table()
+create_Days_Table()
 
 def insert_User(user : User):
     with conn:
@@ -88,6 +97,11 @@ def get_all_Habits():
     return get
 
 
+def get_all_Tracked_Names():
+    c.execute('SELECT Name from Tracked')
+    get =c.fetchall()
+    return get
+
 def daily_reset(name):
     c.execute('UPDATE Tracked SET  Status = FALSE  WHERE Name = ?;',[name])
     conn.commit()
@@ -122,8 +136,9 @@ def get_ALL_Habit(name):
 
 
 def update_streak(name,complete):
-    print(name)
-    c.execute('UPDATE Tracked SET Streak_Num = Streak_Num + 1,Completion_day = ?, Status = TRUE  WHERE Name = ?;',[complete,name])
+    c.execute('UPDATE Tracked SET Streak_Num = Streak_Num + 1,Status = TRUE WHERE Name = ?;',[name])
+    status = True
+    c.execute('INSERT INTO Days (Name,Date,Status) VALUES (?,?,?)',[name,complete,status])
     conn.commit()
     print("Streak has been updated for " + name )
 
@@ -133,11 +148,28 @@ def longest_streak_Habit():
     long = c.fetchall()
     return long
 
+def broken_Streak(name):
+    c.execute('UPDATE Tracked SET Streak_Num = 0 , Status = FALSE  WHERE Name = ?;',[name])
+    status = False
+    date = get_Yesterday()
+    c.execute('INSERT INTO Days (Name,Date,Status) VALUES (?,?,?)',[name,date,status])
+    conn.commit()
+    print("Streak has been broken for " + name )
 
 
-def longest_streak():
-    return
-    
+def get_Yesterday():
+    # Get today's date
+    today = datetime.datetime.today()
+ 
+    # Yesterday date
+    yesterday =  today - datetime.timedelta(days = 1)
+    yesterday = yesterday.strftime("%x")
+    return yesterday
+
+def get_all_Days():
+    c.execute("SELECT * FROM Days")
+    days = c.fetchall()
+    return days
 
 conn.commit()
 

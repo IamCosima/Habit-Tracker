@@ -8,6 +8,9 @@ import inquirer
 import habits_methods
 import user
 import analytics
+import database
+
+
 
 console = Console()
 app = typer.Typer(help="HabitTic an Awsome CLI habit Tracker.")
@@ -16,12 +19,17 @@ app.add_typer(habits_methods.app,name="Habits")
 app.add_typer(analytics.app,name="Analytics")
 
 @app.command("Start")
-def start(name: Annotated[str, typer.Option(prompt=True,help='Start the program and prompt name of user to welcome them')]):
+def start(help='Start the program and prompt name of user to welcome them'):
     Title ='HabitTic'
-    welcome_message = '[green]Welcome ' + name + ' :smile:'
+    welcome_message = '[green]Welcome ' + ' :smile:'
     print(pyfiglet.figlet_format(Title))
     print(welcome_message)
+    database.create_table()
+    database.create_Tracked()
+    database.create_User_Table()
+    database.create_Days_Table()
     habits_methods.reset()
+
 
 
 if __name__ == "__main__":
