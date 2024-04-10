@@ -14,12 +14,15 @@ import database
 
 console = Console()
 app = typer.Typer(help="HabitTic an Awsome CLI habit Tracker.")
-app.add_typer(user.app,name="Users")
+#app.add_typer(user.app,name="Users")
 app.add_typer(habits_methods.app,name="Habits")
 app.add_typer(analytics.app,name="Analytics")
 
 @app.command("Start")
-def start(help='Start the program and prompt name of user to welcome them'):
+def start():
+    """
+    Initilises the database as well as resets the habits if a day passes
+    """
     Title ='HabitTic'
     welcome_message = '[green]Welcome ' + ' :smile:'
     print(pyfiglet.figlet_format(Title))

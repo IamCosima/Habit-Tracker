@@ -33,32 +33,23 @@ new_Habit = model.Habit('','','','',0)
 @app.command("List_All")
 def List_Tracked_Habits():
     """
-    This will Show all Tracked Habits
+    List all habits in Table form
     """
     Title = 'All Habits'
     print(pyfiglet.figlet_format(Title))
     List_All_Daily_Habits()
     List_All_Weekly_Habits()
     
-    #Title_table = ':diamonds: Daily Habits :diamonds:'
-    #print(Title_table)
-    #console.print(Daily_habits)
-
-    #Title_table = ':diamonds: Weekly Habits :diamonds:'
-    #print(Title_table)
-    #console.print(Weekly_habits)
 
 @app.command("Daily")
 def List_All_Daily_Habits():
     """
-    'This will show all the daily Habits in Table Form'
+    List daily Habits in Table Form
     """
     Title = 'All Daily Habits'
     print(pyfiglet.figlet_format(Title))
     daily = database.get_all_Daily_habits()
-    #print(daily)
     Title_table = ':diamonds: Daily Habits :diamonds:'
-    #print(Title_table)
     for i in range(len(daily)):
             if daily[i][4] == '1':
                 Daily_habits.add_row(daily[i][0], str(daily[i][2]),'✅')
@@ -70,13 +61,12 @@ def List_All_Daily_Habits():
 @app.command("Weekly")
 def List_All_Weekly_Habits():
     """
-    'This will show all the weekly Habits in Table Form'
+    List weekly Habits in Table Form
     """
     Title = 'All Weekly Habits'
     print(pyfiglet.figlet_format(Title))
     weekly = database.get_all_Weekly_habits()
     Title_table = ':diamonds: Weekly Habits :diamonds:'
-    #print(Title_table)
 
     for i in range(len(weekly)):
         if weekly[i][4] == '1':
@@ -90,6 +80,9 @@ def List_All_Weekly_Habits():
 
 @app.command("Summary")
 def List_weekly_Summary():
+    """
+    List all Habits in table based on date
+    """
     weekly_summary = Table(show_header=True)
     all = database.get_all_Days()
     names = database.get_all_Tracked_Names()
@@ -119,7 +112,7 @@ def List_weekly_Summary():
 @app.command("Longest_Streak")
 def List_Longest_Streak():
     """
-    List Longest Streak
+    List Longest Streak of chosen habit
     """
     Title = 'List Longest Streak'
     print(pyfiglet.figlet_format(Title))

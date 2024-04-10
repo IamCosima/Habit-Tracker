@@ -66,6 +66,9 @@ Default_Habits = [
 #Habits
 @app.command("Create")
 def Habit_Create():
+    """
+    Create Habit with specifed parameters
+    """
     Title = 'Create Habit'
     print(pyfiglet.figlet_format(Title))
     database.create_table()
@@ -79,6 +82,9 @@ def Habit_Create():
 
 @app.command("Delete")
 def Habit_Delete(): 
+    """
+    Delete habits from the database
+    """
     Title = 'Delete Habit'
     print(pyfiglet.figlet_format(Title))
     name = habit_list()
@@ -111,6 +117,9 @@ def habit_list():
 
 @app.command("Track")
 def Habit_Track():
+    """
+    Track new habit and choose from predefined and custom habits
+    """
     Title = 'Track Habit'
     print(pyfiglet.figlet_format(Title))
     tracked = inquirer.prompt(Default_Habits)
@@ -155,6 +164,9 @@ def custom_habit():
 
 @app.command("Check")
 def check_off():
+    """
+    Complete a habit for the defined prodicity
+    """
     Title = 'Check Off Habit'
     print(pyfiglet.figlet_format(Title))
     name = choice()
@@ -176,11 +188,20 @@ def choice():
         return check
 
 def reset():
+    
     all = database.get_all_Habits()                                                     
     for i in range(len(all)): 
         print(all[i][4])
         if all[i][4] == '1':
             database.daily_reset(all[i][0])
+        elif all[i][4] == '1' and all[i][1] == "Weekly":
+            Last_Action = datetime.strptime(all[i][5], '%m/%d/%y')
+            today = datetime.datetime.today()
+            Week_Later =  Last_Action + datetime.timedelta(days = 7)
+            if Week_Later == today:
+                database.daily_reset(all[i][0])
+            else:
+                print('It has not been a week yet')
         else:
             database.broken_Streak(all[i][0])
 
