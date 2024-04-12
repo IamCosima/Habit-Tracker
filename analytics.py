@@ -10,6 +10,7 @@ import database
 import datetime
 import habits_methods
 import calendar 
+import random
 
 
 console = Console()
@@ -81,29 +82,42 @@ def List_All_Weekly_Habits():
 @app.command("Summary")
 def List_weekly_Summary():
     """
-    List all Habits in table based on date
+    List selected Habit in table based on date
     """
     weekly_summary = Table(show_header=True)
     all = database.get_all_Days()
     names = database.get_all_Tracked_Names()
-    Column_Names = [i[0] for i in names]
+    #Column_Names = [i[0] for i in names]
     summary = res = [list(ele) for ele in all]  
     print('🟢 = That the habit was completed' + '\n'+'🔴 = That the habit was missed')
+
+    choice = habits_methods.choice()
+
+    Title = choice
+    print(pyfiglet.figlet_format(Title))
+
+
+
     for k in range(len(summary)):
-        if summary[k][2] == '1':
-           summary[k][2] = '🟢'
-        elif summary[k][2] == '0':
-            summary[k][2] = '🔴'
-        else:
-           print(summary[k])
+        if summary[k][0] == choice:
+            if summary[k][2] == '1':
+                summary[k][2] = '🟢'
+            elif summary[k][2] == '0':
+                summary[k][2] = '🔴'
+            else:
+                print(summary[k])
+        
     
     weekly_summary.add_column("Date")
-    for col in Column_Names:
-        weekly_summary.add_column(col)
+    weekly_summary.add_column("Status")
+    #for col in Column_Names:
+    #    weekly_summary.add_column(col)
 
 
-    for j in range(len(summary)-1):
-        weekly_summary.add_row(summary[j][1],summary[j][2],summary[j + 1][2])
+    #print(summary)
+    for j in range(len(summary)):
+            if summary[j][0] == choice:
+                weekly_summary.add_row(summary[j][1],summary[j][2])
         
 
     console.print(weekly_summary)
@@ -120,6 +134,7 @@ def List_Longest_Streak():
     streak = database.get_ALL_Habit(name)
     streak_message = '[green]Well Done: ' + str(streak[0]) +' and Has a Streak of ' + str(streak[1]) + ' :smile:'
     print(streak_message)
+    insparational_Emoji()
 
 
 
@@ -135,6 +150,24 @@ def List_Longest_Streak_Habit():
     streak = list(streaks)
     streak_message = '[green]Well Done your longest habit is: ' + str(streak[0][0]) +' and Has a Streak of ' + str(streak[0][1]) + ' :smile:'
     print(streak_message)
+    insparational_Emoji()
 
-    if __name__ == "__main__":
-        app()
+
+@app.command("Fill")
+def testing():
+    """
+    Fill Tables with 4 weeks worth of data for testing
+    """
+    database.test_data()
+
+
+@app.command("quotes")
+def insparational_Emoji():
+    all = database.get_Badge()
+    intrand = random.randint(0,9)
+    print(all[intrand][0] + ' ' + all[intrand][1] )
+    
+
+
+if __name__ == "__main__":
+    app()

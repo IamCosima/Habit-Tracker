@@ -8,10 +8,3 @@ class Habit:
         self.Habit_Streak_Num = Habit_Streak_Num 
         self.Habit_Day = Habit_Day if Habit_Day is not None else datetime.datetime.today().strftime("%x")
         self.status = status
-
-
-
-class User:
-    def __init__(self,User_name,User_level = 0):
-        self.User_name = User_name
-        self.User_level = User_level

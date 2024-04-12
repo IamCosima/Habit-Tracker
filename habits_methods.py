@@ -149,6 +149,10 @@ def Habit_Track():
 
 
 def custom_habit():
+    """
+    Gets all the habits from the table and then formats them to be used in an inquirer list
+    which will be chosen and the choice returned
+    """
     raw = database.get_all_user_Habits()
     processed = [i[0] for i in raw]
     All_tracked = [
@@ -174,7 +178,11 @@ def check_off():
     database.update_streak(name,date)
     
 def choice():
-        raw = database.checked()
+        """
+     Gets all the habits from the table and then formats them to be used in an inquirer list
+     which will be chosen and the choice returned
+        """
+        raw = database.get_all_Tracked_Names()
         processed = [i[0] for i in raw]
         All_tracked = [
         inquirer.List(
@@ -188,18 +196,32 @@ def choice():
         return check
 
 def reset():
-    
-    all = database.get_all_Habits()                                                     
+    """
+    This is so that when ever the program is reinitalised it can reset the streaks when it is a new day
+    """
+    all = database.get_all_Habits()     
+    datetime                                                
     for i in range(len(all)): 
-        print(all[i][4])
-        if all[i][4] == '1':
-            database.daily_reset(all[i][0])
-        elif all[i][4] == '1' and all[i][1] == "Weekly":
-            Last_Action = datetime.strptime(all[i][5], '%m/%d/%y')
-            today = datetime.datetime.today()
-            Week_Later =  Last_Action + datetime.timedelta(days = 7)
-            if Week_Later == today:
-                database.daily_reset(all[i][0])
+        Last_Action = datetime.datetime.strptime(all[i][5],'%m/%d/%y')
+        today = datetime.datetime.today()
+        Week_Later =  Last_Action + datetime.timedelta(days = 7)
+        if all[i][4] == '1' and all[i][1] == "Daily":
+            if Last_Action.strftime('%x') != today.strftime('%x'):
+                if all[i][2] >= 3:
+                    print(all[i][0])
+                    analytics.insparational_Emoji()
+                    database.daily_reset(all[i][0])
+                else:
+                    database.daily_reset(all[i][0])
+            else:
+                print('It has not been a day yet')    
+        elif all[i][4] == '1' and all[i][1] != "Weekly":
+            if Week_Later.strftime('%x') == today.strftime('%x'):
+                if all[i][2] >= 3:
+                    analytics.insparational_Emoji()
+                    database.daily_reset(all[i][0])
+                else:
+                    database.daily_reset(all[i][0])
             else:
                 print('It has not been a week yet')
         else:

@@ -6,7 +6,6 @@ import pyfiglet
 from typing_extensions import Annotated
 import inquirer
 import habits_methods
-import user
 import analytics
 import database
 
@@ -14,7 +13,6 @@ import database
 
 console = Console()
 app = typer.Typer(help="HabitTic an Awsome CLI habit Tracker.")
-#app.add_typer(user.app,name="Users")
 app.add_typer(habits_methods.app,name="Habits")
 app.add_typer(analytics.app,name="Analytics")
 
@@ -27,10 +25,6 @@ def start():
     welcome_message = '[green]Welcome ' + ' :smile:'
     print(pyfiglet.figlet_format(Title))
     print(welcome_message)
-    database.create_table()
-    database.create_Tracked()
-    database.create_User_Table()
-    database.create_Days_Table()
     habits_methods.reset()
 
 
