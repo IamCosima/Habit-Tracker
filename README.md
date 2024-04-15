@@ -91,20 +91,20 @@ These are the libaries that will need to be installed so that the habit tracker 
 4. Open the program in your code editor of choice
 5. Open a terminal in the Repo's root folder
 6. For Help use this command
-   '''sh
+   ```sh
    python HabitTic.py --help
-   '''
+   ```
 7. For the help functions of the other command groups use
-   '''sh
+   ```sh
    python HabitTic.py Analytics --help
-   '''
-   '''sh
+   ```
+   ```sh
    python HabitTic.py Habits --help
-   '''
+   ```
 8. Please make sure to run the start command everyday as it initalises everything and resets the habits when a certain time period has gone by
-   '''sh
+   ```sh
    python HabitTic.py Start 
-   '''
+   ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
