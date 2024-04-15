@@ -163,6 +163,9 @@ def testing():
 
 @app.command("quotes")
 def insparational_Emoji():
+    """
+    Sends a random insparational message to user in terminal
+    """
     all = database.get_Badge()
     intrand = random.randint(0,9)
     print(all[intrand][0] + ' ' + all[intrand][1] )
