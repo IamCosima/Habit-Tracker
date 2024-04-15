@@ -85,20 +85,26 @@ These are the libaries that will need to be installed so that the habit tracker 
  
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-
+1. Download the Repo as a zip
+2. Unzip the Repo
+3. Install All the prerequisites
+4. Open the program in your code editor of choice
+5. Open a terminal in the Repo's root folder
+6. For Help use this command
+   '''sh
+   python HabitTic.py --help
+   '''
+7. For the help functions of the other command groups use
+   '''sh
+   python HabitTic.py Analytics --help
+   '''
+   '''sh
+   python HabitTic.py Habits --help
+   '''
+8. Please make sure to run the start command everyday as it initalises everything and resets the habits when a certain time period has gone by
+   '''sh
+   python HabitTic.py Start 
+   '''
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
