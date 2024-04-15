@@ -112,9 +112,21 @@ These are the libaries that will need to be installed so that the habit tracker 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+### 1.Screenshot of Welcome Page
+![Screenshot of Welcome Page](Assets/Welcome.png)
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+
+### 2.Screenshot of Daily Page
+![Screenshot of Daily Page](Assets/Daily.png)
+
+### 3.Screenshot of Weekly Page
+![Screenshot of Weekly Page](Assets/Weekly.png)
+
+### 4.Screenshot of Summary Page
+![Screenshot of Summary Page](Assets/Summary.png)
+
+
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
