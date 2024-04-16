@@ -77,8 +77,6 @@ def List_All_Weekly_Habits():
     console.print(Weekly_habits)
  
 
-
-
 @app.command("Summary")
 def List_weekly_Summary():
     """

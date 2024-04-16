@@ -46,7 +46,7 @@ def create_Badges_Table():
               ("You are truly the GOAT.",":goat:"),
               ("You are unstoppable!",":flexed_biceps:"),
               ("It has been a long climb, but you are finally at the top.",":person_climbing:"),
-              ("I’m putting your achievement into song. What rhymes with GOAT?",":microphone :notes:"),
+              ("I’m putting your achievement into song. What rhymes with GOAT?",":microphone: :notes:"),
               ("You’ve raised the bar and set the standard for excellence. Well done!",":person_lifting_weights:"),
 
             ]
@@ -99,6 +99,7 @@ def delete_habits(name):
     #Deletes custom habit from habit table
     c.execute("DELETE FROM Habit WHERE Name = ? ",[name])
     c.execute("DELETE FROM Tracked WHERE Name = ? ",[name])
+    c.execute("DELETE FROM Days WHERE Name = ? ",[name])
     conn.commit()
     print('User generated habit ' + name + ' has been deleted')
 

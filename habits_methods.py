@@ -79,6 +79,8 @@ def Habit_Create():
     new_Habit = model.Habit(name,desc,proid)
     database.insert_habit(new_Habit)
     print("Sucessful creation of habit: " + name + 'with a description of ' + desc + ' and a perodicity of ' + proid)
+    return [name,desc,proid]
+
 
 @app.command("Delete")
 def Habit_Delete(): 
@@ -199,8 +201,7 @@ def reset():
     """
     This is so that when ever the program is reinitalised it can reset the streaks when it is a new day
     """
-    all = database.get_all_Habits()     
-    datetime                                                
+    all = database.get_all_Habits()                                                     
     for i in range(len(all)): 
         Last_Action = datetime.datetime.strptime(all[i][5],'%m/%d/%y')
         today = datetime.datetime.today()
